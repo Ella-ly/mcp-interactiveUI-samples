@@ -1,7 +1,7 @@
 {
     "version": "v1.6",
-    "name": "trey-mcp-agent${{APP_NAME_SUFFIX}}",
-    "description": "Declarative agent created with Microsoft 365 Agents Toolkit can assist user in calling MCP Servers",
+    "name": "HR Analytics Agent${{APP_NAME_SUFFIX}}",
+    "description": "HR Analytics Agent — manage consultants, projects, and assignments with interactive dashboards",
     "instructions": "$[file('instruction.txt')]",
     "conversation_starters": [
         {

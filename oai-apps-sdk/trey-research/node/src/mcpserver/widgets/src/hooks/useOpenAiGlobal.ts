@@ -19,7 +19,7 @@ declare global {
       callTool?: (name: string, args?: unknown) => Promise<unknown>;
       requestDisplayMode?: (options: { mode: string }) => Promise<string>;
       openExternal?: (url: string) => void;
-      sendFollowUpMessage?: (message: string) => void;
+      sendFollowUpMessage?: (args: { prompt: string; scrollToBottom?: boolean }) => Promise<void>;
       requestModal?: () => void;
       requestClose?: () => void;
       addEventListener?: (event: string, handler: (data: unknown) => void) => void;

@@ -15,7 +15,7 @@ import {
 } from "@fluentui/react-icons";
 import { useOpenAiGlobal } from "../hooks/useOpenAiGlobal";
 import { useThemeColors, type ThemeColors } from "../hooks/useThemeColors";
-import type { DashboardData, Consultant, Assignment } from "../types";
+import type { DashboardData, Consultant, Assignment, ConsultantProfileData } from "../types";
 
 /* ── Helpers ── */
 const AVATAR_COLORS = ["#0a66c2", "#7c3aed", "#0e7490", "#b45309", "#059669", "#dc2626", "#6d28d9", "#0284c7"];
@@ -107,31 +107,44 @@ function DonutChart({ segments, size = 100, t }: { segments: { label: string; va
   );
 }
 
-/* ── Prompt copy button (copies prompt text to clipboard) ── */
-/* Uses a plain <span> (no <button> / SVG) and defers the clipboard
-   write so the host platform's MutationObserver never sees a DOM
-   change it can't handle. */
-function PromptAction({ label, prompt, t }: {
-  label: string;
-  prompt: string;
+/* ── Profile action: calls tool with dataOnly flag to get profile data ── */
+function ProfileAction({ consultantName, t, onProfileLoaded, onError }: {
+  consultantName: string;
   t: ThemeColors;
+  onProfileLoaded: (data: ConsultantProfileData) => void;
+  onError: (msg: string) => void;
 }) {
+  const [loading, setLoading] = useState(false);
+
   const handlePointerDown = (e: React.PointerEvent) => {
     e.stopPropagation();
     e.preventDefault();
-    // Defer clipboard write off the synchronous event / mutation stack
-    setTimeout(() => {
-      navigator.clipboard.writeText(prompt).catch(() => {
-        /* fallback: execCommand */
-        const ta = document.createElement("textarea");
-        ta.value = prompt;
-        ta.style.position = "fixed";
-        ta.style.left = "-9999px";
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand("copy");
-        document.body.removeChild(ta);
-      });
+    if (loading) return;
+    setLoading(true);
+    setTimeout(async () => {
+      try {
+        if (!window.openai?.callTool) {
+          onError("callTool is not available on this platform.");
+          return;
+        }
+        const result: any = await window.openai.callTool("show-consultant-profile", {
+          consultantId: consultantName,
+          dataOnly: true,
+        });
+        const profileData =
+          result?.consultant ? result :
+          result?.structuredContent?.consultant ? result.structuredContent :
+          null;
+        if (profileData?.consultant) {
+          onProfileLoaded(profileData as ConsultantProfileData);
+          return;
+        }
+        onError("Failed to load profile: unexpected response format.");
+      } catch (err: any) {
+        onError("Failed to load profile: " + (err?.message ?? "Unknown error"));
+      } finally {
+        setLoading(false);
+      }
     }, 0);
   };
 
@@ -143,13 +156,57 @@ function PromptAction({ label, prompt, t }: {
         border: `1px solid ${t.brand}33`,
         background: t.brandLight,
         color: t.brand,
+        cursor: loading ? "wait" : "pointer", fontFamily: "inherit", display: "inline-flex",
+        alignItems: "center", gap: 4, whiteSpace: "nowrap",
+        userSelect: "none", opacity: loading ? 0.6 : 1,
+      }}
+      title={"View profile for " + consultantName}
+    >
+      <PersonBoard20Regular style={{ fontSize: 13 }} /> {loading ? "Loading…" : "Profile"}
+    </span>
+  );
+}
+
+/* ── Details action: sends follow-up message in chat ── */
+function DetailsAction({ projectName, t }: {
+  projectName: string;
+  t: ThemeColors;
+}) {
+  const [sent, setSent] = useState(false);
+
+  const handlePointerDown = (e: React.PointerEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const prompt = "Display project details for: \"" + projectName + "\"";
+    setTimeout(() => {
+      if (window.openai?.sendFollowUpMessage) {
+        window.openai.sendFollowUpMessage({ prompt, scrollToBottom: true } as any);
+        setSent(true);
+        setTimeout(() => setSent(false), 2000);
+        return;
+      }
+      // Fallback: copy prompt to clipboard
+      navigator.clipboard.writeText(prompt).catch(() => {});
+      setSent(true);
+      setTimeout(() => setSent(false), 2000);
+    }, 0);
+  };
+
+  return (
+    <span
+      onPointerDown={handlePointerDown}
+      style={{
+        padding: "4px 10px", borderRadius: 6, fontSize: 11, fontWeight: 500,
+        border: `1px solid ${t.brand}33`,
+        background: sent ? t.greenBg : t.brandLight,
+        color: sent ? t.green : t.brand,
         cursor: "pointer", fontFamily: "inherit", display: "inline-flex",
         alignItems: "center", gap: 4, whiteSpace: "nowrap",
-        userSelect: "none",
+        userSelect: "none", transition: "background 0.2s, color 0.2s",
       }}
-      title={"Copy prompt: " + prompt}
+      title={"Show details for " + projectName}
     >
-      &#x2398;&#xFE0E; {label}
+      <Open16Regular style={{ fontSize: 13 }} /> {sent ? "Sent ✓" : "Details"}
     </span>
   );
 }
@@ -160,11 +217,14 @@ const fallback: DashboardData = { consultants: [], projects: [], assignments: []
 /* ═══════════════════════════════════════════════════════════════════
    DASHBOARD — read-only overview; actions are driven by user prompts
    ═══════════════════════════════════════════════════════════════════ */
-export function Dashboard() {
+export function Dashboard({ onShowProfile }: { onShowProfile?: (data: ConsultantProfileData) => void } = {}) {
   const t = useThemeColors();
   const toolOutput = useOpenAiGlobal<DashboardData>("toolOutput");
   const data = toolOutput ?? fallback;
   const allAssignments = data.assignments ?? [];
+
+  /* ── Error state ── */
+  const [profileError, setProfileError] = useState<string | null>(null);
 
   /* ── Fullscreen toggle ── */
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -311,6 +371,13 @@ export function Dashboard() {
         </div>
       )}
 
+      {/* ── Profile error banner ── */}
+      {profileError && (
+        <div style={{ ...cardStyle, padding: "10px 16px", display: "flex", alignItems: "center", gap: 8, background: "#fef2f2", border: "1px solid #fca5a5" }}>
+          <span style={{ fontSize: 12, color: "#dc2626" }}>⚠ {profileError}</span>
+        </div>
+      )}
+
       {/* ── KPI Cards ── */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 14 }}>
         {[
@@ -408,7 +475,7 @@ export function Dashboard() {
                     {c.revenue > 0 && (
                       <span style={{ fontSize: 13, fontWeight: 600, color: t.green }}>${(c.revenue / 1000).toFixed(1)}k</span>
                     )}
-                    <PromptAction label="Profile" prompt={"Show profile for " + c.name} t={t} />
+                    <ProfileAction consultantName={c.name} t={t} onProfileLoaded={onShowProfile ?? (() => {})} onError={(msg) => { setProfileError(msg); setTimeout(() => setProfileError(null), 4000); }} />
                   </div>
                 </div>
               ))}
@@ -440,7 +507,7 @@ export function Dashboard() {
                     {p.revenue > 0 && (
                       <span style={{ fontSize: 13, fontWeight: 600, color: t.green }}>${(p.revenue / 1000).toFixed(1)}k</span>
                     )}
-                    <PromptAction label="Details" prompt={"Show details for project " + p.name} t={t} />
+                    <DetailsAction projectName={p.name} t={t} />
                   </div>
                 </div>
               ))}

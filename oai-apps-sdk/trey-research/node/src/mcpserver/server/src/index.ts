@@ -8,6 +8,7 @@ import express, { type Request, type Response } from "express";
 import cors from "cors";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createHRServer } from "./mcp-server.js";
+import * as db from "./db.js";
 import { ensureTables } from "./db.js";
 
 const PORT = parseInt(process.env.PORT ?? "3001", 10);
@@ -160,6 +161,39 @@ app.use(express.json());
 // ─── Health check ────────────────────────────────────────────────────
 app.get("/health", (_req, res) => {
   res.json({ status: "ok", server: "trey-hr-consultant", transport: "streamable-http" });
+});
+
+// ─── REST API: consultant profile (fallback for widget inline fetch) ──
+app.get("/api/consultant-profile", async (req: Request, res: Response) => {
+  try {
+    const name = (req.query.name as string) ?? "";
+    if (!name) { res.status(400).json({ error: "name query param required" }); return; }
+    const consultant = await db.resolveConsultant(name);
+    if (!consultant) { res.status(404).json({ error: "Not found" }); return; }
+    const assignments = await db.getAssignmentsByConsultant(consultant.rowKey);
+    const allProjects = await db.getAllProjects();
+    const projectMap = new Map(allProjects.map((p) => [p.rowKey, { name: p.name, clientName: p.clientName }]));
+    const enriched = assignments.map((a) => ({
+      id: a.rowKey, projectId: a.projectId, consultantId: a.consultantId,
+      role: a.role, billable: a.billable, rate: a.rate,
+      forecast: JSON.parse(a.forecast || "[]"), delivered: JSON.parse(a.delivered || "[]"),
+      projectName: projectMap.get(a.projectId)?.name ?? "Unknown",
+      clientName: projectMap.get(a.projectId)?.clientName ?? "Unknown",
+    }));
+    res.json({
+      consultant: {
+        id: consultant.rowKey, name: consultant.name, email: consultant.email,
+        phone: consultant.phone, photoUrl: consultant.consultantPhotoUrl,
+        location: JSON.parse(consultant.location || "{}"),
+        skills: JSON.parse(consultant.skills || "[]"),
+        certifications: JSON.parse(consultant.certifications || "[]"),
+        roles: JSON.parse(consultant.roles || "[]"),
+      },
+      assignments: enriched,
+    });
+  } catch (err: any) {
+    res.status(500).json({ error: err?.message ?? "Internal error" });
+  }
 });
 
 // ─── MCP Streamable HTTP – POST ──────────────────────────────────────

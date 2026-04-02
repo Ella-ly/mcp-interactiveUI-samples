@@ -28,7 +28,7 @@
         },
         {
             "name": "show-bulk-editor",
-            "description": "Open the bulk editor widget to view and edit consultant records. Accepts optional filters: skill, name — to show only matching consultants."
+            "description": "Open the bulk editor widget to view and edit consultant records. Accepts optional filters: skill, name \u2014 to show only matching consultants."
         },
         {
             "name": "show-consultant-profile",
@@ -36,7 +36,7 @@
         },
         {
             "name": "show-hr-dashboard",
-            "description": "Display the HR consultant dashboard with KPIs. Accepts optional filters: consultantName, projectName, skill, role, billable — the dashboard auto-applies them so users see a focused view."
+            "description": "Display the HR consultant dashboard with KPIs. Accepts optional filters: consultantName, projectName, skill, role, billable \u2014 the dashboard auto-applies them so users see a focused view."
         },
         {
             "name": "show-project-details",
@@ -51,13 +51,14 @@
         {
             "type": "RemoteMCPServer",
             "spec": {
-                "url": "https://t3n5kh44-3001.aue.devtunnels.ms/mcp",
-                "x-mcp_tool_description": {
+                "url": "https://fb5wj37v-3002.usw2.devtunnels.ms/mcp",
+                "enable_dynamic_discovery": false,
+                "mcp_tool_description": {
                     "tools": [
                         {
                             "name": "show-hr-dashboard",
                             "title": "Show HR Dashboard",
-                            "description": "Display the HR consultant dashboard with KPIs. Accepts optional filters: consultantName, projectName, skill, role, billable — the dashboard auto-applies them so users see a focused view.",
+                            "description": "Display the HR consultant dashboard with KPIs. Accepts optional filters: consultantName, projectName, skill, role, billable \u2014 the dashboard auto-applies them so users see a focused view.",
                             "inputSchema": {
                                 "type": "object",
                                 "properties": {
@@ -71,7 +72,7 @@
                                     },
                                     "skill": {
                                         "type": "string",
-                                        "description": "Optional skill to pre-filter the dashboard — shows only consultants with this skill and their assignments."
+                                        "description": "Optional skill to pre-filter the dashboard \u2014 shows only consultants with this skill and their assignments."
                                     },
                                     "role": {
                                         "type": "string",
@@ -79,7 +80,7 @@
                                     },
                                     "billable": {
                                         "type": "boolean",
-                                        "description": "Optional — set true to show only billable assignments, false for non-billable."
+                                        "description": "Optional \u2014 set true to show only billable assignments, false for non-billable."
                                     }
                                 },
                                 "additionalProperties": false
@@ -91,7 +92,7 @@
                             },
                             "_meta": {
                                 "openai/outputTemplate": "ui://widget/hr-dashboard.html",
-                                "openai/toolInvocation/invoking": "Loading HR dashboard…",
+                                "openai/toolInvocation/invoking": "Loading HR dashboard\u2026",
                                 "openai/toolInvocation/invoked": "Dashboard ready",
                                 "openai/widgetAccessible": true
                             }
@@ -120,7 +121,7 @@
                             },
                             "_meta": {
                                 "openai/outputTemplate": "ui://widget/consultant-profile.html",
-                                "openai/toolInvocation/invoking": "Loading consultant profile…",
+                                "openai/toolInvocation/invoking": "Loading consultant profile\u2026",
                                 "openai/toolInvocation/invoked": "Profile ready",
                                 "openai/widgetAccessible": true
                             }
@@ -150,7 +151,7 @@
                             },
                             "_meta": {
                                 "openai/outputTemplate": "ui://widget/bulk-editor.html",
-                                "openai/toolInvocation/invoking": "Opening bulk editor…",
+                                "openai/toolInvocation/invoking": "Opening bulk editor\u2026",
                                 "openai/toolInvocation/invoked": "Editor ready",
                                 "openai/widgetAccessible": true
                             }
@@ -158,7 +159,7 @@
                         {
                             "name": "show-bulk-editor",
                             "title": "Show Bulk Editor",
-                            "description": "Open the bulk editor widget to view and edit consultant records. Accepts optional filters: skill, name — to show only matching consultants.",
+                            "description": "Open the bulk editor widget to view and edit consultant records. Accepts optional filters: skill, name \u2014 to show only matching consultants.",
                             "inputSchema": {
                                 "type": "object",
                                 "properties": {
@@ -180,7 +181,7 @@
                             },
                             "_meta": {
                                 "openai/outputTemplate": "ui://widget/bulk-editor.html",
-                                "openai/toolInvocation/invoking": "Opening bulk editor…",
+                                "openai/toolInvocation/invoking": "Opening bulk editor\u2026",
                                 "openai/toolInvocation/invoked": "Editor ready",
                                 "openai/widgetAccessible": true
                             }
@@ -310,7 +311,7 @@
                             },
                             "_meta": {
                                 "openai/outputTemplate": "ui://widget/hr-dashboard.html",
-                                "openai/toolInvocation/invoking": "Loading HR dashboard…",
+                                "openai/toolInvocation/invoking": "Loading HR dashboard\u2026",
                                 "openai/toolInvocation/invoked": "Dashboard ready",
                                 "openai/widgetAccessible": true
                             }

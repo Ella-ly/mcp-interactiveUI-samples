@@ -112,10 +112,10 @@ const useStyles = makeStyles({
   },
 });
 
-export function ConsultantProfile() {
+export function ConsultantProfile({ data: dataProp }: { data?: ConsultantProfileData } = {}) {
   const styles = useStyles();
   const toolOutput = useOpenAiGlobal<ConsultantProfileData>("toolOutput");
-  const data = toolOutput;
+  const data = dataProp ?? toolOutput;
 
   if (!data?.consultant) {
     return (

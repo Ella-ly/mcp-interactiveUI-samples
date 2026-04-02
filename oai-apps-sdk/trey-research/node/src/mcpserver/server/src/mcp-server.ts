@@ -231,6 +231,10 @@ const profileInputSchema = {
       type: "string" as const,
       description: "The ID or name (partial match, case-insensitive) of the consultant to view.",
     },
+    dataOnly: {
+      type: "boolean" as const,
+      description: "When true, return only structured data without widget rendering metadata. Used for inline widget updates.",
+    },
   },
   required: ["consultantId"],
   additionalProperties: false,
@@ -404,7 +408,7 @@ const removeAssignmentInputSchema = {
 
 // ─── Zod parsers (for runtime validation) ──────────────────────────
 
-const profileParser = z.object({ consultantId: z.string() });
+const profileParser = z.object({ consultantId: z.string(), dataOnly: z.boolean().optional() });
 const searchParser = z.object({ skill: z.string().optional(), name: z.string().optional() });
 const updateParser = z.object({
   consultantId: z.string(),
@@ -742,7 +746,7 @@ export function createHRServer(): Server {
 
         // ──── Consultant Profile ────
         case "show-consultant-profile": {
-          const { consultantId } = profileParser.parse(args);
+          const { consultantId, dataOnly } = profileParser.parse(args);
           const consultant = await db.resolveConsultant(consultantId);
           if (!consultant) {
             return {
@@ -766,7 +770,7 @@ export function createHRServer(): Server {
             assignments: enrichedAssignments,
           };
 
-          return {
+          const result: Record<string, unknown> = {
             content: [
               {
                 type: "text" as const,
@@ -774,8 +778,11 @@ export function createHRServer(): Server {
               },
             ],
             structuredContent: profileData,
-            _meta: invocationMeta(PROFILE_WIDGET),
           };
+          if (!dataOnly) {
+            result._meta = invocationMeta(PROFILE_WIDGET);
+          }
+          return result;
         }
 
         // ──── Search Consultants ────

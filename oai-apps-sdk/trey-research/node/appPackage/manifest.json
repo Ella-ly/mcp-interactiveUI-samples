@@ -14,12 +14,12 @@
         "outline": "outline.png"
     },
     "name": {
-        "short": "trey-mcp-agent${{APP_NAME_SUFFIX}}",
-        "full": "Full name for trey-mcp-agent"
+        "short": "HR Analytics Agent${{APP_NAME_SUFFIX}}",
+        "full": "HR Analytics Agent"
     },
     "description": {
-        "short": "Short description for trey-mcp-agent",
-        "full": "Full description for trey-mcp-agent"
+        "short": "HR consultant management with rich interactive dashboards",
+        "full": "HR Analytics Agent — manage consultants, projects, and assignments through natural language with interactive dashboards and profile views."
     },
     "accentColor": "#FFFFFF",
     "composeExtensions": [],

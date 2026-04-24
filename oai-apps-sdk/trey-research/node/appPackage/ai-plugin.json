@@ -2,7 +2,7 @@
     "$schema": "https://developer.microsoft.com/json-schemas/copilot/plugin/v2.4/schema.json",
     "schema_version": "v2.4",
     "name_for_human": "trey-mcp-agent",
-    "description_for_human": "trey-mcp-agent${{APP_NAME_SUFFIX}}",
+    "description_for_human": "trey-mcp-agent",
     "contact_email": "publisher-email@example.com",
     "namespace": "treymcpagent",
     "functions": [
@@ -51,7 +51,7 @@
         {
             "type": "RemoteMCPServer",
             "spec": {
-                "url": "https://fb5wj37v-3002.usw2.devtunnels.ms/mcp",
+                "url": "https://n8x2xk9g-3001.usw2.devtunnels.ms/mcp",
                 "enable_dynamic_discovery": false,
                 "mcp_tool_description": {
                     "tools": [

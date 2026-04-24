@@ -135,7 +135,10 @@ export function createServer(): McpServer {
     },
     {
       csp: {
-        frameDomains: ["https://learn-video.azurefd.net"],
+        frameDomains: [
+          "https://learn-video.azurefd.net",
+          "https://learn.microsoft.com",
+        ],
       },
     },
   );

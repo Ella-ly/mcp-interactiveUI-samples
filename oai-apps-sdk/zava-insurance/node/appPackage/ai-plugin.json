@@ -36,7 +36,7 @@
         },
         {
             "name": "update-inspection",
-            "description": "Updates an inspection record — status, findings, recommended actions, property, or inspector assignment."
+            "description": "Updates an inspection record \u2014 status, findings, recommended actions, property, or inspector assignment."
         },
         {
             "name": "update-purchase-order",
@@ -47,8 +47,9 @@
         {
             "type": "RemoteMCPServer",
             "spec": {
-                "url": "https://t3n5kh44-3001.aue.devtunnels.ms/mcp",
-                "x-mcp_tool_description": {
+                "url": "https://qns0j8x2-3001.usw2.devtunnels.ms/mcp",
+                "enable_dynamic_discovery": false,
+                "mcp_tool_description": {
                     "tools": [
                         {
                             "name": "show-claims-dashboard",
@@ -63,7 +64,7 @@
                                     },
                                     "policyHolderName": {
                                         "type": "string",
-                                        "description": "Filter claims by policy holder name. Supports partial, case-insensitive matching — pass the first name, last name, or any part of the name (e.g. 'Kimberly', 'king', 'kim'). When the user asks about a specific person's claims, always use this parameter."
+                                        "description": "Filter claims by policy holder name. Supports partial, case-insensitive matching \u2014 pass the first name, last name, or any part of the name (e.g. 'Kimberly', 'king', 'kim'). When the user asks about a specific person's claims, always use this parameter."
                                     },
                                     "sortBy": {
                                         "type": "string",
@@ -88,7 +89,7 @@
                             },
                             "_meta": {
                                 "openai/outputTemplate": "ui://widget/claims-dashboard.html",
-                                "openai/toolInvocation/invoking": "Loading claims dashboard…",
+                                "openai/toolInvocation/invoking": "Loading claims dashboard\u2026",
                                 "openai/toolInvocation/invoked": "Claims dashboard ready",
                                 "openai/widgetAccessible": true
                             }
@@ -114,7 +115,7 @@
                             },
                             "_meta": {
                                 "openai/outputTemplate": "ui://widget/claim-detail.html",
-                                "openai/toolInvocation/invoking": "Loading claim details…",
+                                "openai/toolInvocation/invoking": "Loading claim details\u2026",
                                 "openai/toolInvocation/invoked": "Claim details ready",
                                 "openai/widgetAccessible": true
                             }
@@ -141,7 +142,7 @@
                             },
                             "_meta": {
                                 "openai/outputTemplate": "ui://widget/contractors-list.html",
-                                "openai/toolInvocation/invoking": "Loading contractors…",
+                                "openai/toolInvocation/invoking": "Loading contractors\u2026",
                                 "openai/toolInvocation/invoked": "Contractors ready",
                                 "openai/widgetAccessible": true
                             }
@@ -175,7 +176,7 @@
                         {
                             "name": "update-inspection",
                             "title": "Update Inspection",
-                            "description": "Updates an inspection record — status, findings, recommended actions, property, or inspector assignment.",
+                            "description": "Updates an inspection record \u2014 status, findings, recommended actions, property, or inspector assignment.",
                             "inputSchema": {
                                 "type": "object",
                                 "properties": {

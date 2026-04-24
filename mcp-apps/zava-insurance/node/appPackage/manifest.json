@@ -1,7 +1,7 @@
 {
     "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.24/MicrosoftTeams.schema.json",
     "manifestVersion": "1.24",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "id": "${{TEAMS_APP_ID}}",
     "developer": {
         "name": "M365 Cloud Advocates",
@@ -14,12 +14,12 @@
         "outline": "outline.png"
     },
     "name": {
-        "short": "zava-mcp-app${{APP_NAME_SUFFIX}}",
-        "full": "Full name for zava-mcp-app"
+        "short": "zava-insurance${{APP_NAME_SUFFIX}}",
+        "full": "Zava Insurance Agent"
     },
     "description": {
-        "short": "Short description for zava-mcp-app",
-        "full": "Full description for zava-mcp-app"
+        "short": "Zava Insurance claims management agent",
+        "full": "A Copilot agent for managing Zava Insurance claims, inspections, and contractors"
     },
     "accentColor": "#FFFFFF",
     "composeExtensions": [],

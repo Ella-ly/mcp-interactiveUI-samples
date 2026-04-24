@@ -1,16 +1,27 @@
-import React, { useState, useCallback } from "react";
+import React, { useCallback } from "react";
 import { createRoot } from "react-dom/client";
 import { FluentProvider, webLightTheme, webDarkTheme } from "@fluentui/react-components";
 import { Dashboard } from "./Dashboard";
 import { ConsultantProfile } from "../consultant-profile/ConsultantProfile";
 import { useOpenAiGlobal } from "../hooks/useOpenAiGlobal";
+import { useWidgetState } from "../hooks/useWidgetState";
 import type { Theme, ConsultantProfileData } from "../types";
+
+interface WidgetPersistedState {
+  profileView: ConsultantProfileData | null;
+}
 
 function App() {
   const theme = (useOpenAiGlobal<string>("theme") ?? "light") as Theme;
-  const [profileView, setProfileView] = useState<ConsultantProfileData | null>(null);
+  const [widgetState, setWidgetState] = useWidgetState<WidgetPersistedState>({ profileView: null });
+  const profileView = widgetState.profileView;
 
-  const handleBack = useCallback(() => setProfileView(null), []);
+  const setProfileView = useCallback(
+    (data: ConsultantProfileData | null) => setWidgetState({ ...widgetState, profileView: data }),
+    [widgetState, setWidgetState]
+  );
+
+  const handleBack = useCallback(() => setProfileView(null), [setProfileView]);
 
   return (
     <FluentProvider theme={theme === "dark" ? webDarkTheme : webLightTheme}>

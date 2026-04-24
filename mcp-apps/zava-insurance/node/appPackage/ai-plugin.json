@@ -1,8 +1,8 @@
 {
     "$schema": "https://developer.microsoft.com/json-schemas/copilot/plugin/v2.4/schema.json",
     "schema_version": "v2.4",
-    "name_for_human": "zava-mcp-app",
-    "description_for_human": "zava-mcp-app${{APP_NAME_SUFFIX}}",
+    "name_for_human": "zava-insurance",
+    "description_for_human": "zava-insurance${{APP_NAME_SUFFIX}}",
     "contact_email": "publisher-email@example.com",
     "namespace": "zavamcpapp",
     "functions": [
@@ -43,7 +43,7 @@
         {
             "type": "RemoteMCPServer",
             "spec": {
-                "url": "https://t3n5kh44-3001.aue.devtunnels.ms/mcp",
+                "url": "https://cc2j5tnn-3001.usw2.devtunnels.ms/mcp",
                 "x-mcp_tool_description": {
                     "tools": [
                         {

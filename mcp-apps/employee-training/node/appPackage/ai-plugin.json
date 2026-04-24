@@ -15,7 +15,7 @@
         {
             "type": "RemoteMCPServer",
             "spec": {
-                "url": "<your-mcp-server-url>",
+                "url": "https://sqsn28z5-3002.usw2.devtunnels.ms/mcp",
                 "x-mcp_tool_description": {
                     "tools": [
                         {

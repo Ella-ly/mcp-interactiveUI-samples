@@ -1,6 +1,6 @@
 {
     "version": "v1.6",
-    "name": "HR Analytics Agent${{APP_NAME_SUFFIX}}",
+    "name": "HR Analytics Agent",
     "description": "HR Analytics Agent — manage consultants, projects, and assignments with interactive dashboards",
     "instructions": "$[file('instruction.txt')]",
     "conversation_starters": [
